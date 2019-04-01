@@ -38,7 +38,7 @@ Backend is a nginx running owasp modsecurity for fun and profit
 
 ### H2Load
 
-We use h2load from the nghttp2 package to run our [benchmark script](benchmark.sh)
+We use `h2load` from the nghttp2 package to run our [benchmark script](benchmark.sh)
 
 #### Install Ubuntu
 
