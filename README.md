@@ -11,6 +11,9 @@ This is a docker compose setup to test the performance of the different combinat
 ` docker-compose up `
 
 ### Install certs
+
+If you want to install cert in your browser:
+
 https://www.google.no/search?&q=install+self+signed+cert+osx+keychain
 
 ## What does it do
