@@ -15,15 +15,19 @@ https://www.google.no/search?&q=install+self+signed+cert+osx+keychain
 
 ## What does it do
 
-Well. This is sort of a testsetup with varnish 6, h2-enabled. With NGINX, Hitch and haproxy as frontend ssl-balances
+Well. This is sort of a testsetup with varnish 6, h2-enabled. With NGINX, Hitch and haproxy as frontend ssl-balancers
 
 |port|what|
 |----|----|
-|443|haproxy -> varnish port 80 normal http|
-|444|haproxy proxy-protocol -> Varnish port 81 proxy-protocol|
-|445|haproxy proxy-protocol over UDS (Unix Domain Socket) -> Varnish UDS proxy protocol|
-|446|nginx -> varnish
-|447|hitch proxy-protocol -> Varnish port 81 proxy-protocol|
+|80| Varnish directly
+|81| Varnish reciver for proxy-protocol
+|81| haproxy -> varnish
+|443|hithch -> varnish 
+|444|nginx -> varnish
+|445|haproxy -> varnish:80
+|446|haproxy -> varnish:81
+|447|haproxy -> UDS -> varnish
+|448|haproxy tcp -> UDS -> vanrish
 
 Backend is a nginx running owasp modsecurity for fun and profit
 
