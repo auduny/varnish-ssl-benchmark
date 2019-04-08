@@ -48,7 +48,12 @@ services:
      - "446:446"
      - "447:447"
      - "448:448"
- 
+  envoy:
+    image: envoyproxy/envoy
+    port:
+      - "10000:10000"
+    volumes:
+      - ${PWD}/etc/envoy/:/etc/envoy/
   backend:
     image: owasp/modsecurity-crs
     environment:
