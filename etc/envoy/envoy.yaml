@@ -13,18 +13,14 @@ static_resources:
           route_config:
             name: local_route
             virtual_hosts:
-            - name: backend
+            - name: benchmark
               domains:
-              - "example.com"
+              - "*"
               routes:
               - match:
-                  prefix: "/service/1"
+                  prefix: "/"
                 route:
-                  cluster: service1
-              - match:
-                  prefix: "/service/2"
-                route:
-                  cluster: service2
+                  cluster: varnish
           http_filters:
           - name: envoy.router
             config: {}
@@ -36,23 +32,14 @@ static_resources:
               private_key:
                 filename: "/etc/ssl-managed/self-signed.key"
   clusters:
-  - name: service1
+  - name: varnish
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: round_robin
     http2_protocol_options: {}
     hosts:
     - socket_address:
-        address: service1
-        port_value: 80
-  - name: service2
-    connect_timeout: 0.25s
-    type: strict_dns
-    lb_policy: round_robin
-    http2_protocol_options: {}
-    hosts:
-    - socket_address:
-        address: service2
+        address: varnish
         port_value: 80
 admin:
   access_log_path: "/dev/null"
