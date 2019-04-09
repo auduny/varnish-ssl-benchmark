@@ -50,10 +50,12 @@ services:
      - "448:448"
   envoy:
     image: envoyproxy/envoy
-    port:
-      - "10000:10000"
+    ports:
+      - "449:449"
+      - "8001:8001"
     volumes:
       - ${PWD}/etc/envoy/:/etc/envoy/
+      - ${PWD}/etc/ssl-managed:/etc/ssl-managed
   backend:
     image: owasp/modsecurity-crs
     environment:

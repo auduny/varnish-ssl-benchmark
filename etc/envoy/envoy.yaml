@@ -56,9 +56,9 @@ static_resources:
         common_tls_context:
           tls_certificates:
             - certificate_chain:
-                filename: "/etc/example-com.crt"
+                filename: "/etc/ssl-managed/self-signed.crt"
               private_key:
-                filename: "/etc/example-com.key"
+                filename: "/etc/ssl-managed/self-signed.key"
   clusters:
   - name: service1
     connect_timeout: 0.25s
