@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 CLIENTSLIST="100 500"
 REQUESTSLIST="500 1000"
@@ -36,7 +36,7 @@ for type in $TYPES;do
     port=$(echo $type| cut -f2 -d:)
     opts=$(echo $type | cut -f3 -d:)
     echo -e "${RED}$text${NC}"
-    if [ "$port" == "80" ] || [ "$port" == "82"];then
+    if [ "$port" == "80" ] || [ "$port" == "82" ];then
         url=http://localhost
     else
         url=https://localhost
