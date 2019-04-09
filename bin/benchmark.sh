@@ -25,6 +25,8 @@ Client->(SSL/H1)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish:447:--h1
 Client->(SSL/H2)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish:447:
 Client->(SSL/TCP)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish:448:--h1
 Client->(SSL/TCP)Haproxy->(UDS/H2/Proxy-Protocol)->Varnish:448
+Client->(SSL/H1)Envoy->(H2)->Varnish:449:--h1
+Client->(SSL/H2)Envoy->(H2)->Varnish:449:
 "
 
 

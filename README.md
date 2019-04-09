@@ -31,10 +31,14 @@ Well. This is sort of a testsetup with varnish 6, h2-enabled. With NGINX, Hitch 
 |446|haproxy -> varnish:81
 |447|haproxy -> UDS -> varnish
 |448|haproxy tcp -> UDS -> vanrish
+|449|envoy -> varnish:80
 
 Backend is a nginx running owasp modsecurity for fun and profit
 
 ## Benchmarking
+
+`bin/benchmark.sh` or `docker-compose up benchmarker`
+
 
 ### H2Load
 

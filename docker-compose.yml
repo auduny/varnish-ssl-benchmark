@@ -25,6 +25,8 @@ services:
       - ${PWD}/etc/ssl-managed:/etc/ssl/hitch/
     ports:
      - "443:443" 
+    depends_on:
+      - varnish
   nginx:
     image: nginx:latest
     hostname: docker-nginx
@@ -34,6 +36,8 @@ services:
       - ${PWD}/etc/ssl-managed:/etc/ssl-managed
     ports:
       - "444:444"
+    depends_on: 
+      - varnish
   haproxy:
     image: haproxy:1.9.5
     hostname: docker-haproxy
@@ -43,11 +47,13 @@ services:
       - ${PWD}/etc/ssl-managed:/etc/ssl-managed
       - ${PWD}/run:/tmp/run
     ports:
-     - "82:82"
-     - "445:445"
-     - "446:446"
-     - "447:447"
-     - "448:448"
+      - "82:82"
+      - "445:445"
+      - "446:446"
+      - "447:447"
+      - "448:448"
+    depends_on:
+      - varnish
   envoy:
     image: envoyproxy/envoy
     ports:
@@ -56,10 +62,27 @@ services:
     volumes:
       - ${PWD}/etc/envoy/:/etc/envoy/
       - ${PWD}/etc/ssl-managed:/etc/ssl-managed
+    depends_on: 
+      - varnish
   backend:
     image: owasp/modsecurity-crs
     environment:
       - PARANOIA=1
     ports:
       - "8080:80"
+  benchmarker:
+    image: centminmod/docker-ubuntu-nghttp2
+    network_mode: host
+    volumes:
+      - ${PWD}/bin:/tmp/bin
+    command: ["/bin/bash", "/tmp/bin/benchmark.sh"]
+    depends_on: 
+      - envoy
+      - haproxy
+      - nginx
+      - hitch
+
+
+
+
 
