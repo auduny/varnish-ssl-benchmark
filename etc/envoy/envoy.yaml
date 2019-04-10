@@ -40,7 +40,7 @@ static_resources:
     hosts:
     - socket_address:
         address: varnish
-        port_value: 80
+        port_value: 8081
 admin:
   access_log_path: "/dev/null"
   address:
