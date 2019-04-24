@@ -66,6 +66,15 @@ services:
       - ${PWD}/etc/ssl-managed:/etc/ssl-managed
     depends_on: 
       - varnish
+  traefik:
+    image: 
+    ports: 
+      - 8080:8080 
+      - 80:80 
+    volumes:
+      - ${PWD}/etc/traefik/:/etc/traefik/
+    depends_on:
+      - varnish
   backend:
     image: owasp/modsecurity-crs
     environment:
