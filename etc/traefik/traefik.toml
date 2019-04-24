@@ -20,9 +20,16 @@
 #
 # Optional
 # Default:
+defaultEntryPoints = ["https"]
+
 [entryPoints]
-    [entryPoints.web]
-    address = ":80"
+  [entryPoints.https]
+  address = ":8450"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      certFile = "/etc/ssl-managed/self-signed.crt"
+      keyFile = "/etc/ssl-managed/self-signed.key"
+
 
 ################################################################
 # Traefik logs configuration

@@ -69,10 +69,10 @@ services:
   traefik:
     image: 
     ports: 
-      - 8080:8080 
-      - 80:80 
+      - 8450:8450
     volumes:
       - ${PWD}/etc/traefik/:/etc/traefik/
+      - ${PWD}/etc/ssl-managed:/etc/ssl-managed
     depends_on:
       - varnish
   backend:
