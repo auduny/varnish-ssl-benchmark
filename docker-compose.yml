@@ -67,7 +67,7 @@ services:
     depends_on: 
       - varnish
   traefik:
-    image: 
+    image: traefik
     ports: 
       - 8450:8450
     volumes:
