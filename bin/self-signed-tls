@@ -1,7 +1,6 @@
 #!/bin/bash
 
-if [ ! -d "etc/" ]
-then
+if [ ! -d "etc/" ]; then
    echo "Missing folder etc/"
    echo "Usage: bin/self-signed-tls"
    exit
@@ -11,41 +10,37 @@ DIR=""
 CADIR=""
 # Process Arguments
 while [ "$1" != "" ]; do
-  PARAM=`echo $1 | awk -F= '{print $1}'`
-  VALUE=`echo $1 | awk -F= '{print $2}'`
-  case $PARAM in
-    -p) DIR=$VALUE;;
-    -ca) CADIR=$VALUE;;
-  esac
-  shift
+   PARAM=$(echo $1 | awk -F= '{print $1}')
+   VALUE=$(echo $1 | awk -F= '{print $2}')
+   case $PARAM in
+   -p) DIR=$VALUE ;;
+   -ca) CADIR=$VALUE ;;
+   esac
+   shift
 done
 
-if [ "$CADIR" == "" ] && [ -e "$HOME/.ssl/" ] && [ -e "$HOME/.ssl/ca.key" ]
-then
-    echo "$HOME/.ssl/ca.key finnes!!"
-    CADIR="$HOME/.ssl/"
+if [ "$CADIR" == "" ] && [ -e "$HOME/.ssl/" ] && [ -e "$HOME/.ssl/ca.key" ]; then
+   echo "$HOME/.ssl/ca.key finnes!!"
+   CADIR="$HOME/.ssl/"
 fi
 
-if [ "$DIR" == "" ]
-then
-    OUTPATH=`pwd`/etc/ssl-managed/
+if [ "$DIR" == "" ]; then
+   OUTPATH=$(pwd)/etc/ssl-managed/
 else
-    OUTPATH=${DIR}/etc/ssl-managed/
+   OUTPATH=${DIR}/etc/ssl-managed/
 fi
 
-if [ ! -e "${OUTPATH}" ]
-then
-    echo "Created: ${OUTPATH}"
-    mkdir -p ${OUTPATH}
+if [ ! -e "${OUTPATH}" ]; then
+   echo "Created: ${OUTPATH}"
+   mkdir -p ${OUTPATH}
 fi
 
-if [ "$CADIR" == "" ]
-then
-    CADIR=$OUTPATH
+if [ "$CADIR" == "" ]; then
+   CADIR=$OUTPATH
 fi
 
 # Directories
-scriptName=`basename $0`
+scriptName=$(basename $0)
 
 # Certificate Variables
 VERBOSE=0
@@ -65,7 +60,7 @@ FILE='self-signed'
 DNS='dns.ext'
 
 buildCsrCnf() {
-cat << EOF > ${OUTPATH}${FILE}.cnf
+   cat <<EOF >${OUTPATH}${FILE}.cnf
 [req]
 default_bits = 2048
 prompt = no
@@ -85,7 +80,7 @@ EOF
 
 # Generating a dhparam.pem if missing
 writeDhParam() {
-cat << EOF > ${OUTPATH}dhparam.pem
+   cat <<EOF >${OUTPATH}dhparam.pem
 -----BEGIN DH PARAMETERS-----
 MIIBCAKCAQEAy5m21Zmz0x+tTuIX3Wv8Vy8eJsVtXmWnWxFzefJ3d7qR3lVt6Jw2
 sKiFHMLck8HXwMK8BN99yOW91hBtQq0bmVSG6jP1aNetLZQM5PQ88eeokgfdGXBr
@@ -99,7 +94,7 @@ EOF
 
 # Generating an initial dns.ext if missing
 writeDnsExt() {
-cat << EOF > ${OUTPATH}dns.ext
+   cat <<EOF >${OUTPATH}dns.ext
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
@@ -119,64 +114,53 @@ DNS.10 = aftenbladet.no
 EOF
 }
 
-
-
 # Build TLS Certificate
 build() {
-  # Santizie domain name for file name
-  FILENAME=${CN/\*\./}
+   # Santizie domain name for file name
+   FILENAME=${CN/\*\./}
 
-  if [ ! -e "${OUTPATH}dhparam.pem" ]
-  then
-    writeDhParam
-  fi
+   if [ ! -e "${OUTPATH}dhparam.pem" ]; then
+      writeDhParam
+   fi
 
-  if [ ! -e "${OUTPATH}dns.ext" ]
-  then
-    writeDnsExt
-  fi
+   if [ ! -e "${OUTPATH}dns.ext" ]; then
+      writeDnsExt
+   fi
 
-  created_priv_key=0
-  # Generate CA key & crt
-  if [ ! -e  "${CADIR}${CAKEY}" ] || [ ! -e  "${CADIR}${CAFILE}" ]
-  then
-     # Create the _CA.key
-     openssl genrsa -out ${OUTPATH}${CAKEY} 2048
-     # Create the _CA.pem
-     openssl req -x509 -new -nodes -key ${OUTPATH}${CAKEY} -sha256 -days ${DURATION} -out ${OUTPATH}${CAFILE} -subj "/C=NO/ST=na/L=na/O=Schibsted/OU=na/CN=self-signed/emailAddress=na@schibsted.com"
-     created_priv_key=1
-  else
-     echo "Key: ${CADIR}${CAKEY} og ${CADIR}${CAFILE} finnes!!"
-  fi
+   created_priv_key=0
+   # Generate CA key & crt
+   if [ ! -e "${CADIR}${CAKEY}" ] || [ ! -e "${CADIR}${CAFILE}" ]; then
+      # Create the _CA.key
+      openssl genrsa -out ${OUTPATH}${CAKEY} 2048
+      # Create the _CA.pem
+      openssl req -x509 -new -nodes -key ${OUTPATH}${CAKEY} -sha256 -days ${DURATION} -out ${OUTPATH}${CAFILE} -subj "/C=NO/ST=na/L=na/O=Schibsted/OU=na/CN=self-signed/emailAddress=na@schibsted.com"
+      created_priv_key=1
+   else
+      echo "Key: ${CADIR}${CAKEY} og ${CADIR}${CAFILE} finnes!!"
+   fi
 
-if [ ! -e  "${CADIR}${CAKEY}" ] || [ ! -e "${CADIR}${CAFILE}" ]
-then
-   echo "Missing ${CADIR}${CAFILE}"
-   exit
-fi
+   if [ ! -e "${CADIR}${CAKEY}" ] || [ ! -e "${CADIR}${CAFILE}" ]; then
+      echo "Missing ${CADIR}${CAFILE}"
+      exit
+   fi
 
-
-
-  if [ ! -e ${OUTPATH}${FILE}.csr ]
-  then
+   if [ ! -e ${OUTPATH}${FILE}.csr ]; then
       # CSR Configuration
       buildCsrCnf
       # Server key
-      openssl req -new -sha256 -nodes -out ${OUTPATH}${FILE}.csr -newkey rsa:2048 -keyout ${OUTPATH}${FILENAME}.key -config <( cat ${OUTPATH}${FILE}.cnf )
-  fi
+      openssl req -new -sha256 -nodes -out ${OUTPATH}${FILE}.csr -newkey rsa:2048 -keyout ${OUTPATH}${FILENAME}.key -config <(cat ${OUTPATH}${FILE}.cnf)
+   fi
 
-  openssl x509 -req -in ${OUTPATH}${FILE}.csr -CA ${CADIR}${CAFILE} -CAkey ${CADIR}${CAKEY} -CAcreateserial -out ${OUTPATH}${FILENAME}.crt -days ${DURATION} -sha256 -extfile ${OUTPATH}${DNS}
-  cat ${OUTPATH}${FILENAME}.crt ${OUTPATH}${FILENAME}.key >> ${OUTPATH}${FILENAME}.pem
-  if [ $created_priv_key == 1 ]
-  then
-     # Copy files to
-     if [ ! -d "$HOME/.ssl" ]
-     then
-        mkdir "$HOME/.ssl" &&  cp ${OUTPATH}ca.* "$HOME/.ssl"
-     else
-        cp ${OUTPATH}ca.* "$HOME/.ssl"
-     fi
-  fi
+   openssl x509 -req -in ${OUTPATH}${FILE}.csr -CA ${CADIR}${CAFILE} -CAkey ${CADIR}${CAKEY} -CAcreateserial -out ${OUTPATH}${FILENAME}.crt -days ${DURATION} -sha256 -extfile ${OUTPATH}${DNS}
+   cat ${OUTPATH}${FILENAME}.crt ${OUTPATH}${FILENAME}.key >>${OUTPATH}${FILENAME}.pem
+   if [ $created_priv_key == 1 ]; then
+      # Copy files to
+      if [ ! -d "$HOME/.ssl" ]; then
+         mkdir "$HOME/.ssl" && cp ${OUTPATH}ca.* "$HOME/.ssl"
+      else
+         cp ${OUTPATH}ca.* "$HOME/.ssl"
+      fi
+   fi
 }
 
 build

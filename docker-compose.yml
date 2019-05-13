@@ -69,7 +69,8 @@ services:
   traefik:
     image: traefik
     ports: 
-      - 8450:8450
+      - "8050:8050"
+      - "8450:8450"
     volumes:
       - ${PWD}/etc/traefik/:/etc/traefik/
       - ${PWD}/etc/ssl-managed:/etc/ssl-managed
@@ -92,8 +93,3 @@ services:
       - haproxy
       - nginx
       - hitch
-
-
-
-
-

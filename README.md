@@ -18,20 +18,23 @@ https://www.google.no/search?&q=install+self+signed+cert+osx+keychain
 
 ## What does it do
 
-Well. This is sort of a testsetup with varnish 6, h2-enabled. With NGINX, Hitch and haproxy as frontend ssl-balancers
+Well. This is sort of a testsetup with varnish 6, h2-enabled. With different combinations
+of frontends/ssl-balancers:
 
 |port|what|
 |----|----|
-|80| Varnish directly
-|81| Varnish reciver for proxy-protocol
-|81| haproxy -> varnish
-|443|hithch -> varnish 
-|444|nginx -> varnish
-|445|haproxy -> varnish:80
-|446|haproxy -> varnish:81
-|447|haproxy -> UDS -> varnish
-|448|haproxy tcp -> UDS -> vanrish
-|449|envoy -> varnish:80
+|80| Backend
+|8081| Varnish directly (http)
+|8082| Varnish receiver (proxy-protocol)
+|8084| haproxy -> varnish
+|8443| hitch -> varnish
+|8444| nginx -> varnish
+|8445| haproxy -> varnish(http)
+|8446| haproxy -> varnish(proxy-protocol)
+|8447| haproxy -> UDS -> varnish
+|8448| haproxy tcp -> UDS -> varnish
+|8449| envoy -> varnish(http)
+|8450| traefik -> varnish(http)
 
 Backend is a nginx running owasp modsecurity for fun and profit
 
@@ -39,10 +42,10 @@ Backend is a nginx running owasp modsecurity for fun and profit
 
 `bin/benchmark.sh` or `docker-compose up benchmarker`
 
-
 ### H2Load
 
-We use `h2load` from the nghttp2 package to run our [benchmark script](benchmark.sh)
+We use [h2load](https://nghttp2.org/documentation/h2load.1.html#) from the
+[nghttp2 package](https://github.com/nghttp2/nghttp2) from [our benchmark script](benchmark.sh)
 
 #### Install Ubuntu
 
@@ -65,6 +68,3 @@ We use `h2load` from the nghttp2 package to run our [benchmark script](benchmark
 #### Install OS X
 
 `brew install vegeta`
-
-
-

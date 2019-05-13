@@ -1,3 +1,4 @@
 run/varnish.sock
-etc/ssl-managed/self-signed*
+etc/ssl-managed
 log/
+

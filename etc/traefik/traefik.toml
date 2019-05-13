@@ -10,7 +10,7 @@
 ################################################################
 [global]
   checkNewVersion = true
-  sendAnonymousUsage = true
+  sendAnonymousUsage = false
 
 ################################################################
 # Entrypoints configuration
@@ -23,6 +23,8 @@
 defaultEntryPoints = ["https"]
 
 [entryPoints]
+  [entryPoints.traefik]
+  address = ":8050"
   [entryPoints.https]
   address = ":8450"
     [entryPoints.https.tls]
@@ -154,12 +156,14 @@ defaultEntryPoints = ["https"]
 #
 # exposedByDefault = true
 
+[file]
+
 [frontends]
     [frontends.frontend1]
     backend ="varnish"
     entrypoints = ["https"]
-        [frontends.frontend1.all]
-        rule = "PathPrefix:/"
+        [frontends.frontend1.routes.all]
+        rule = "PathPrefix: /"
 
 [backends]
   [backends.varnish]
