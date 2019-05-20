@@ -31,23 +31,17 @@ Client->(SSL/H1)Traefik->(H1)->Varnish:8450:--h1
 Client->(SSL/H2)Traefik->(H1)->Varnish:8450
 "
 
-
-
-for type in $TYPES;do
+for type in $TYPES; do
     text=$(echo $type | cut -f1 -d:)
-    port=$(echo $type| cut -f2 -d:)
+    port=$(echo $type | cut -f2 -d:)
     opts=$(echo $type | cut -f3 -d:)
     echo -e "${RED}$text${NC}"
-    if [ "$port" == "8081" ] || [ "$port" == "8084" ];then
+    if [ "$port" == "8081" ] || [ "$port" == "8084" ]; then
         url=http://localhost
     else
         url=https://localhost
     fi
-    h2load $opts $url:$port -c $CLIENTS -n $REQUESTS |grep -v progress |egrep '^(finished|request|Application)'
+    h2load $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress | egrep '^(finished|request|Application)'
 done
 
-exit;
-
-
-
-
+exit
