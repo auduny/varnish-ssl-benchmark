@@ -76,12 +76,20 @@ services:
       - ${PWD}/etc/ssl-managed:/etc/ssl-managed
     depends_on:
       - varnish
+#  backend:
+#    image: owasp/modsecurity-crs
+#    environment:
+#      - PARANOIA=1
+#    ports:
+#      - "8080:80"
+#    volumes:
+#      - ${PWD}/etc/www-root:/var/www/html
   backend:
-    image: owasp/modsecurity-crs
-    environment:
-      - PARANOIA=1
+    image: nginx:latest
     ports:
       - "8080:80"
+    volumes:
+      - ${PWD}/etc/www-root:/usr/share/nginx/html
   benchmarker:
     image: centminmod/docker-ubuntu-nghttp2
     network_mode: host
