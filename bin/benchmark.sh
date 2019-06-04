@@ -1,10 +1,11 @@
 #!/bin/bash -x
 
-
+sleep 10
 
 
 CLIENTSLIST="100 500"
 REQUESTSLIST="500 1000"
+
 
 
 
@@ -48,11 +49,11 @@ for type in $TYPES; do
     text=$(echo $type | cut -f1 -d:)
     port=$(echo $type | cut -f2 -d:)
     opts=$(echo $type | cut -f3 -d:)
-    echo -e "${RED}$text${NC}"
+    echo -e "${RED}$text on port $port${NC}"
     if [ "$port" == "8081" ] || [ "$port" == "8084" ]; then
-        url=http://localhost
+        url=http://127.0.0.1
     else
-        url=https://localhost
+        url=https://127.0.0.1
     fi
     h2load $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress | egrep '^(finished|request|Application)'
 done
