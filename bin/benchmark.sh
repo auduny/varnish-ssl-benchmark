@@ -29,7 +29,7 @@ Client->(H2)->Varnish:8081
 Client->(H1)->HAProxy->(H1)->Varnish:8084:--h1
 Client->(SSL/TCP)->Hitch->(H1)->Varnish:8443:--h1
 Client->(SSL/TCP)->Hitch->(H2)->Varnish:8443:
-Client->(SSL/TCP)->Hitch->(USD/H1)->Varnish:8444:--h1
+Client->(SSL/TCP)->Hitch->(UDS/H1)->Varnish:8444:--h1
 Client->(SSL/TCP)->Hitch->(UDS/H2)->Varnish:8444:
 Client->(SSL/H1)Haproxy->(H1)->Varnish:8445:--h1
 Client->(SSL/H2)Haproxy->(H1)->Varnish:8445:
