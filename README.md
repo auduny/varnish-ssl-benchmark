@@ -71,97 +71,30 @@ We use [h2load](https://nghttp2.org/documentation/h2load.1.html#) from the
 
 # Results
 
-Running with 20 clients and 5000 requests
+|what   |time   |reqs   |bw     |
+|-----|---|---|---|
+|Client->(H1)->Varnish on port 8081|924.60ms|5407.75|1.94GB|
+|Client->(H2)->Varnish on port 8081|1.95s|2560.23|940.16MB|
+|Client->(H1)->HAProxy->(H1)->Varnish on port 8084|2.02s|2471.65|907.29MB|
+|Client->(SSL/H1)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446|3.31s|1508.43|553.72MB|
+|Client->(SSL/H1)Nginx->(H1)->Varnish on port 8445|3.67s|1361.52|499.79MB|
+|Client->(SSL/TCP)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8448|3.86s|1295.88|475.72MB|
+|Client->(SSL/H1)Haproxy->(H1)->Varnish on port 8445|3.98s|1256.31|461.17MB|
+|Client->(SSL/H2)Haproxy->(H1)->Varnish on port 8445|4.22s|1184.89|435.09MB|
+|Client->(SSL/TCP)Haproxy->(UDS/H2/Proxy-Protocol)->Varnish on port 8448|4.25s|1176.82|432.15MB|
+|Client->(SSL/TCP)->Hitch->(H1)->Varnish on port 8443|4.43s|1129.68|414.71MB|
+|Client->(SSL/H1)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447|4.55s|1098.10|403.09MB|
+|Client->(SSL/H2)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446|4.55s|1097.71|403.08MB|
+|Client->(SSL/H2)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447|4.82s|1038.17|381.22MB|
+|Client->(SSL/H2)Envoy->(H2)->Varnish on port 8449|5.20s|960.99|352.81MB|
+|Client->(SSL/H2)Nginx->(H2)->Varnish on port 8445|5.28s|946.12|347.42MB|
+|Client->(SSL/H1)Envoy->(H2)->Varnish on port 8449|5.35s|935.25|343.36MB|
+|Client->(SSL/TCP)->Hitch->(UDS/H2)->Varnish on port 8444|5.37s|931.95|342.23MB|
+|Client->(SSL/TCP)->Hitch->(USD/H1)->Varnish on port 8444|5.48s|911.94|334.77MB|
+|Client->(SSL/H1)Traefik->(H1)->Varnish on port 8450|5.79s|863.74|317.06MB|
+|Client->(SSL/H1)H2O->(H1)->Varnish on port 8451|6.63s|754.05|276.83MB|
+|Client->(SSL/TCP)->Hitch->(H2)->Varnish on port 8443|6.94s|720.28|264.50MB|
+|Client->(SSL/H2)H2O->(H1)->Varnish on port 8452|7.03s|711.03|261.01MB|
+|Client->(SSL/H2)Traefik->(H1)->Varnish on port 8450|8.80s|568.15|208.56MB|
+|Client->(H1)->Backend(Nginx) on port 8080|22.95s|217.88|79.96MB|
 
-### Client->(H1)->Varnish on port 8081
-Application protocol: http/1.1
-finished in 1.10s, 4552.46 req/s, 1.63GB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(H2)->Varnish on port 8081
-Application protocol: h2c
-finished in 1.65s, 3024.34 req/s, 1.08GB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(H1)->HAProxy->(H1)->Varnish on port 8084
-Application protocol: http/1.1
-finished in 1.75s, 2860.03 req/s, 1.03GB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/TCP)->Hitch->(H1)->Varnish on port 8443
-Application protocol: http/1.1
-finished in 3.86s, 1294.25 req/s, 475.12MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/TCP)->Hitch->(H2)->Varnish on port 8443
-Application protocol: h2
-finished in 3.99s, 1252.40 req/s, 459.90MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/TCP)->Hitch->(USD/H1)->Varnish on port 8444
-Application protocol: http/1.1
-finished in 4.02s, 1243.21 req/s, 456.39MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/TCP)->Hitch->(UDS/H2)->Varnish on port 8444
-Application protocol: h2
-finished in 4.43s, 1129.06 req/s, 414.61MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H1)Haproxy->(H1)->Varnish on port 8445
-Application protocol: http/1.1
-finished in 3.12s, 1603.43 req/s, 588.59MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H2)Haproxy->(H1)->Varnish on port 8445
-Application protocol: h2
-finished in 3.28s, 1523.19 req/s, 559.32MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H1)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446
-Application protocol: http/1.1
-finished in 3.21s, 1556.43 req/s, 571.34MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H2)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446
-Application protocol: h2
-finished in 3.30s, 1514.69 req/s, 556.20MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H1)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447
-Application protocol: http/1.1
-finished in 3.37s, 1482.71 req/s, 544.27MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H2)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447
-Application protocol: h2
-finished in 3.60s, 1387.22 req/s, 509.39MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/TCP)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8448
-Application protocol: http/1.1
-finished in 3.48s, 1438.45 req/s, 528.06MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/TCP)Haproxy->(UDS/H2/Proxy-Protocol)->Varnish on port 8448
-Application protocol: h2
-finished in 3.92s, 1275.08 req/s, 468.23MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H1)Envoy->(H2)->Varnish on port 8449
-Application protocol: http/1.1
-finished in 5.24s, 954.16 req/s, 350.30MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H2)Envoy->(H2)->Varnish on port 8449
-Application protocol: http/1.1
-finished in 5.02s, 995.55 req/s, 365.50MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H1)Traefik->(H1)->Varnish on port 8450
-Application protocol: http/1.1
-finished in 6.22s, 803.47 req/s, 294.94MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H2)Traefik->(H1)->Varnish on port 8450
-Application protocol: h2
-finished in 9.72s, 514.14 req/s, 188.73MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H1)H2O->(H1)->Varnish on port 8451
-Application protocol: http/1.1
-finished in 7.22s, 692.48 req/s, 254.22MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H2)H2O->(H1)->Varnish on port 8452
-Application protocol: h2
-finished in 7.45s, 670.91 req/s, 246.28MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H1)Nginx->(H1)->Varnish on port 8445
-Application protocol: http/1.1
-finished in 4.04s, 1238.06 req/s, 454.47MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout
-### Client->(SSL/H2)Nginx->(H2)->Varnish on port 8445
-Application protocol: h2
-finished in 4.20s, 1191.06 req/s, 437.36MB/s
-requests: 5000 total, 5000 started, 5000 done, 5000 succeeded, 0 failed, 0 errored, 0 timeout

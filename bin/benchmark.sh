@@ -16,7 +16,10 @@ REQUESTS=${BENCH_REQUESTS:-5000}
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo "Running with $CLIENTS clients and $REQUESTS requests"
+rm /tmp/bin/output.txt
+echo | tee -a /tmp/bin/output.txt
+echo "=====================================================" |tee -a /tmp/bin/output.txt
+echo "Running with $CLIENTS clients and $REQUESTS requests" | tee -a /tmp/bin/output.txt
 
 
 TYPES="
@@ -46,11 +49,13 @@ Client->(SSL/H1)Nginx->(H1)->Varnish:8445:--h1
 Client->(SSL/H2)Nginx->(H2)->Varnish:8445:
 "
 
+
+
 for type in $TYPES; do
     text=$(echo $type | cut -f1 -d:)
     port=$(echo $type | cut -f2 -d:)
     opts=$(echo $type | cut -f3 -d:)
-    echo -e "${RED}$text on port $port${NC}" tee -a /tmp/bin/output.txt
+    echo -e "${RED}$text on port $port${NC}" | tee -a /tmp/bin/output.txt
     if [ "$port" == "8080" ] || [ "$port" == "8081" ] || [ "$port" == "8084" ]; then
         url=http://127.0.0.1
     else
