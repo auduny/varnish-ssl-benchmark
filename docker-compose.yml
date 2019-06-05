@@ -1,13 +1,24 @@
 version: "3"
 
 services:
+  backend:
+    image: nginx:latest
+    network_mode: host
+    ports:
+      - "8080:8080"
+    volumes:
+      - ${PWD}/etc/backend:/etc/nginx
+      - ${PWD}/etc/www-root:/usr/share/nginx/html
   varnish:
     image: emgag/varnish:6.0.3-2 
+    network_mode: host
     hostname: docker-varnish
     volumes:
       - ${PWD}/etc/varnish:/etc/varnish
       - ${PWD}/run:/tmp/run/
-    command: varnishd -j unix,user=vcache -F -f /etc/varnish/default.vcl -s malloc,500M -a 0.0.0.0:8081 -a 0.0.0.0:8082,proxy -a /tmp/run/varnish.sock,proxy -T 0.0.0.0:8083 -p feature=+http2
+    tmpfs:
+      - /var/lib/varnish
+    command: varnishd -j unix,user=vcache -F -f /etc/varnish/default.vcl -s malloc,500M -a 0.0.0.0:8081 -a 0.0.0.0:8082,proxy -a /tmp/run/varnish.sock -a /tmp/run/varnish-proxy.sock,proxy -T 0.0.0.0:8083 -p feature=+http2 -p timeout_idle=60
     ports:
       - "8081:8081"
       - "8082:8082"
@@ -17,9 +28,10 @@ services:
   hitch:
     image: zazukoians/hitch:1.5.0
     hostname: docker-hitch
+    network_mode: host
     environment:
       - HITCH_PEM=/etc/ssl/hitch/self-signed.pem
-      - HITCH_PARAMS=--frontend=[*]:8443 --backend=[varnish]:8082 --alpn-protos="h2, http/1.1" --write-proxy-v2
+      - HITCH_PARAMS=--frontend=[*]:8443 --backend=[127.0.0.1]:8082 --alpn-protos="h2, http/1.1" --write-proxy-v2
       - HITCH_CIPHER=EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
     volumes:
       - ${PWD}/log/hitch-front:/var/log
@@ -29,19 +41,26 @@ services:
      - "8443:8443" 
     depends_on:
       - varnish
-  nginx:
-    image: nginx:latest
-    hostname: docker-nginx
+  hitch_uds:
+    image: zazukoians/hitch:1.5.0
+    network_mode: host
+    hostname: docker-hitch-uds
+    environment:
+      - HITCH_PEM=/etc/ssl/hitch/self-signed.pem
+      - HITCH_PARAMS=--frontend=[*]:8444 --backend=/tmp/run/varnish-proxy.sock --alpn-protos="h2, http/1.1" --write-proxy-v2
+      - HITCH_CIPHER=EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
     volumes:
-      - ${PWD}/log/nginx:/var/log/nginx
-      - ${PWD}/etc/nginx:/etc/nginx
-      - ${PWD}/etc/ssl-managed:/etc/ssl-managed
+      - ${PWD}/log/hitch-front:/var/log
+      - ${PWD}/etc/hitch:/etc/hitch
+      - ${PWD}/etc/ssl-managed:/etc/ssl/hitch/
+      - ${PWD}/run:/tmp/run/
     ports:
-      - "8444:8444"
-    depends_on: 
+     - "8444:8444" 
+    depends_on:
       - varnish
   haproxy:
-    image: haproxy:1.9.5
+    image: haproxy:1.9.8
+    network_mode: host
     hostname: docker-haproxy
     volumes:
       - ${PWD}/log/haproxy:/var/log
@@ -58,6 +77,7 @@ services:
       - varnish
   envoy:
     image: envoyproxy/envoy
+    network_mode: host
     ports:
       - "8449:8449"
       - "8001:8001"
@@ -68,6 +88,7 @@ services:
       - varnish
   traefik:
     image: traefik
+    network_mode: host
     ports: 
       - "8050:8050"
       - "8450:8450"
@@ -76,6 +97,32 @@ services:
       - ${PWD}/etc/ssl-managed:/etc/ssl-managed
     depends_on:
       - varnish
+  h2o:
+    image: lkwg82/h2o-http2-server
+    network_mode: host
+    ports: 
+      - "8451:8451"
+      - "8452:8452"
+    volumes:
+      - ${PWD}/etc/h2o/:/etc/h2o/
+      - ${PWD}/etc/ssl-managed:/etc/ssl-managed
+      - ${PWD}/run:/tmp/run
+    depends_on:
+      - varnish
+
+  nginx:
+    image: nginx:latest
+    hostname: docker-nginx
+    network_mode: host
+    volumes:
+      - ${PWD}/log/nginx:/var/log/nginx
+      - ${PWD}/etc/nginx:/etc/nginx
+      - ${PWD}/etc/ssl-managed:/etc/ssl-managed
+    ports:
+      - "8453:8453"
+    depends_on: 
+      - varnish
+
 #  backend:
 #    image: owasp/modsecurity-crs
 #    environment:
@@ -84,12 +131,7 @@ services:
 #      - "8080:80"
 #    volumes:
 #      - ${PWD}/etc/www-root:/var/www/html
-  backend:
-    image: nginx:latest
-    ports:
-      - "8080:80"
-    volumes:
-      - ${PWD}/etc/www-root:/usr/share/nginx/html
+
   benchmarker:
     image: centminmod/docker-ubuntu-nghttp2
     network_mode: host
@@ -101,3 +143,6 @@ services:
       - haproxy
       - nginx
       - hitch
+      - hitch_uds
+      - h2o
+      - traefik
