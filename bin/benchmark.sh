@@ -20,6 +20,7 @@ echo "Running with $CLIENTS clients and $REQUESTS requests"
 
 
 TYPES="
+Client->(H1)->Backend(Nginx):8080:--h1
 Client->(H1)->Varnish:8081:--h1 
 Client->(H2)->Varnish:8081
 Client->(H1)->HAProxy->(H1)->Varnish:8084:--h1
@@ -49,13 +50,14 @@ for type in $TYPES; do
     text=$(echo $type | cut -f1 -d:)
     port=$(echo $type | cut -f2 -d:)
     opts=$(echo $type | cut -f3 -d:)
-    echo -e "${RED}$text on port $port${NC}"
-    if [ "$port" == "8081" ] || [ "$port" == "8084" ]; then
+    echo -e "${RED}$text on port $port${NC}" tee -a /tmp/bin/output.txt
+    if [ "$port" == "8080" ] || [ "$port" == "8081" ] || [ "$port" == "8084" ]; then
         url=http://127.0.0.1
     else
         url=https://127.0.0.1
     fi
-    h2load $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress | egrep '^(finished|request|Application)'
+    h2load $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress | egrep '^(finished|request|Application)' |tee -a /tmp/bin/output.txt
+    echo | tee -a /tmp/bin/output.txt
 done
 
 exit

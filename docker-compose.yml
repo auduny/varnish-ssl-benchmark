@@ -5,8 +5,9 @@ services:
     image: nginx:latest
     network_mode: host
     ports:
-      - "8080:80"
+      - "8080:8080"
     volumes:
+      - ${PWD}/etc/backend:/etc/nginx
       - ${PWD}/etc/www-root:/usr/share/nginx/html
   varnish:
     image: emgag/varnish:6.0.3-2 
@@ -16,7 +17,7 @@ services:
       - ${PWD}/etc/varnish:/etc/varnish
       - ${PWD}/run:/tmp/run/
     tmpfs:
-      - /var/log/varnish
+      - /var/lib/varnish
     command: varnishd -j unix,user=vcache -F -f /etc/varnish/default.vcl -s malloc,500M -a 0.0.0.0:8081 -a 0.0.0.0:8082,proxy -a /tmp/run/varnish.sock -a /tmp/run/varnish-proxy.sock,proxy -T 0.0.0.0:8083 -p feature=+http2 -p timeout_idle=60
     ports:
       - "8081:8081"
