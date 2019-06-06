@@ -18,7 +18,7 @@ services:
       - ${PWD}/run:/tmp/run/
     tmpfs:
       - /var/lib/varnish
-    command: varnishd -j unix,user=vcache -F -f /etc/varnish/default.vcl -s malloc,500M -a 0.0.0.0:8081 -a 0.0.0.0:8082,proxy -a /tmp/run/varnish.sock -a /tmp/run/varnish-proxy.sock,proxy -T 0.0.0.0:8083 -p feature=+http2 -p timeout_idle=60
+    command: varnishd -j unix,user=vcache -F -f /etc/varnish/default.vcl -s malloc,500M -a 0.0.0.0:8081 -a 0.0.0.0:8082,proxy -a /tmp/run/varnish.sock,mode=0666 -a /tmp/run/varnish-proxy.sock,proxy,mode=0666 -T 0.0.0.0:8083 -p feature=+http2 -p timeout_idle=60
     ports:
       - "8081:8081"
       - "8082:8082"

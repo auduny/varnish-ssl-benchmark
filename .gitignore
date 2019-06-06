@@ -1,5 +1,5 @@
 run/varnish.sock
 etc/ssl-managed
 log/
-
+bin/output.txt
 bin/etc/ssl-managed/example.com.key
