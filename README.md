@@ -74,7 +74,7 @@ We use [h2load](https://nghttp2.org/documentation/h2load.1.html#) from the
 ## Hardcore machine with 64 Cores.
 
 |what   |time   |reqs   |bw     |request|connect|1stbyte|savings|
-|-----|---|---|---|---|---|----|---|----|
+|-----|---|---|---|---|---|----|---|
 |Client->(H1)->HAProxy->(H1)->Varnish on port 8084|1.46s|6852.40|19.68Gb/s|29.20ms|9.67ms|48.21ms|20.02%|
 |Client->(H1)->Varnish on port 8081|1.75s|5698.67|16.32Gb/s|71.29ms|9.71ms|60.06ms|0.00%|
 |Client->(H2)->Varnish on port 8081|1.97s|5073.68|14.56Gb/s|29.20ms|10.64ms|315.38ms|0.00%|
