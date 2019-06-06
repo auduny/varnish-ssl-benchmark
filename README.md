@@ -102,29 +102,27 @@ We use [h2load](https://nghttp2.org/documentation/h2load.1.html#) from the
 
 ## Hardcore machine
 
-|what	|time	|reqs	|bw	|
-|-----|---|---|---|
-|Client->(H1)->Varnish on port 8081|593.22ms|8428.65|3.02GB|
-|Client->(H1)->HAProxy->(H1)->Varnish on port 8084|695.61ms|7187.97|2.58GB|
-|Client->(H2)->Varnish on port 8081|918.74ms|5442.23|1.95GB|
-|Client->(SSL/H1)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446|1.52s|3294.94|1.18GB|
-|Client->(SSL/H1)Nginx->(H1)->Varnish on port 8445|1.56s|3210.38|1.15GB|
-|Client->(SSL/H1)Haproxy->(H1)->Varnish on port 8445|1.57s|3178.71|1.14GB|
-|Client->(SSL/H1)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447|1.59s|3147.33|1.13GB|
-|Client->(H1)->Backend(Nginx) on port 8080|1.59s|3145.30|1.13GB|
-|Client->(SSL/TCP)Haproxy->(UDS/H2/Proxy-Protocol)->Varnish on port 8448|1.61s|3100.10|1.11GB|
-|Client->(SSL/H2)Nginx->(H2)->Varnish on port 8445|1.70s|2949.27|1.06GB|
-|Client->(SSL/H1)Traefik->(H1)->Varnish on port 8450|1.71s|2923.19|1.05GB|
-|Client->(SSL/TCP)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8448|1.71s|2917.13|1.05GB|
-|Client->(SSL/H2)H2O->(H1)->Varnish on port 8452|1.98s|2521.95|925.75MB|
-|Client->(SSL/H2)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447|2.04s|2456.86|902.16MB|
-|Client->(SSL/H2)Haproxy->(H1)->Varnish on port 8445|2.08s|2404.16|882.81MB|
-|Client->(SSL/H2)Traefik->(H1)->Varnish on port 8450|2.22s|2256.07|828.16MB|
-|Client->(SSL/H1)H2O->(H1)->Varnish on port 8451|2.37s|2107.87|773.85MB|
-|Client->(SSL/H1)Envoy->(H2)->Varnish on port 8449|2.54s|1964.97|721.39MB|
-|Client->(SSL/H2)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446|2.65s|1885.07|692.20MB|
-|Client->(SSL/TCP)->Hitch->(UDS/H1)->Varnish on port 8444|4.14s|1208.74|443.73MB|
-|Client->(SSL/TCP)->Hitch->(H1)->Varnish on port 8443|4.29s|1164.37|427.44MB|
-|Client->(SSL/TCP)->Hitch->(UDS/H2)->Varnish on port 8444|4.42s|1132.08|415.72MB|
-|Client->(SSL/TCP)->Hitch->(H2)->Varnish on port 8443|4.49s|1114.79|409.37MB|
-|Client->(SSL/H2)Envoy->(H2)->Varnish on port 8449|4.71s|1060.48|389.33MB|
+|what   |time   |reqs   |bw     |request|connect|1stbyte|savings|
+|-----|---|---|---|---|---|----|---|----|
+|Client->(H1)->Varnish on port 8081|1.35s|7431.09|2.66GB|83.82ms|10.20ms|57.97ms|0.00%|
+|Client->(H1)->HAProxy->(H1)->Varnish on port 8084|1.57s|6359.07|2.28GB|18.68ms|11.26ms|49.59ms|20.00%|
+|Client->(H2)->Varnish on port 8081|1.75s|5718.80|2.05GB|18.68ms|197.69ms|225.60ms|0.00%|
+|Client->(SSL/TCP)Haproxy->(UDS/H2/Proxy-Protocol)->Varnish on port 8448|3.46s|2891.51|1.04GB|72.08ms|157.73ms|204.76ms|0.00%|
+|Client->(SSL/H1)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447|3.51s|2852.78|1.02GB|70.68ms|143.66ms|200.88ms|23.11%|
+|Client->(SSL/H1)Traefik->(H1)->Varnish on port 8450|3.54s|2822.24|1.01GB|109.05ms|125.90ms|287.24ms|0.00%|
+|Client->(SSL/H1)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446|3.58s|2791.24|1.00GB|71.25ms|128.20ms|181.60ms|23.22%|
+|Client->(SSL/H1)Nginx->(H1)->Varnish on port 8445|3.75s|2668.94|979.71MB|124.04ms|204.85ms|1.36s|85.48%|
+|Client->(SSL/H2)Nginx->(H2)->Varnish on port 8445|3.77s|2655.49|975.10MB|69.43ms|167.78ms|223.38ms|0.00%|
+|Client->(SSL/H2)Haproxy->(H1)->Varnish on port 8445|3.77s|2653.68|974.44MB|101.88ms|190.82ms|246.45ms|0.00%|
+|Client->(H1)->Backend(Nginx) on port 8080|4.27s|2340.87|859.25MB|||||
+|Client->(SSL/H2)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446|4.34s|2302.06|845.32MB|68.51ms|107.46ms|160.87ms|0.00%|
+|Client->(SSL/H2)Traefik->(H1)->Varnish on port 8450|4.35s|2298.51|843.75MB|63.05ms|232.16ms|281.91ms|0.00%|
+|Client->(SSL/TCP)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8448|4.71s|2121.23|778.71MB|78.87ms|146.02ms|207.07ms|23.11%|
+|Client->(SSL/H2)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447|5.15s|1943.29|713.58MB|64.27ms|175.12ms|245.26ms|0.00%|
+|Client->(SSL/H1)Haproxy->(H1)->Varnish on port 8445|6.53s|1531.60|562.22MB|249.02ms|396.64ms|445.23ms|19.91%|
+|Client->(SSL/H1)H2O->(H1)->Varnish on port 8451|6.87s|1455.52|534.36MB|83.20ms|124.37ms|191.22ms|90.82%|
+|Client->(SSL/H2)H2O->(H1)->Varnish on port 8452|9.09s|1100.35|403.92MB|91.78ms|221.42ms|321.03ms|0.00%|
+|Client->(SSL/TCP)->Hitch->(H1)->Varnish on port 8443|12.25s|816.26|299.65MB|30.34ms|9.93ms|100.61ms|0.00%|
+|Client->(SSL/TCP)->Hitch->(UDS/H2)->Varnish on port 8444|12.97s|771.03|283.14MB|254.85ms|405.35ms|466.21ms|0.00%|
+|Client->(SSL/TCP)->Hitch->(UDS/H1)->Varnish on port 8444|13.26s|753.92|276.77MB|299.80ms|403.51ms|451.13ms|19.91%|
+|Client->(SSL/TCP)->Hitch->(H2)->Varnish on port 8443|15.54s|643.52|236.31MB|235.53ms|351.59ms|396.13ms|0.00%|
