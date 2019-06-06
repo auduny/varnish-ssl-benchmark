@@ -10,7 +10,13 @@ while(<STDIN>) {
     } elsif (/finished in ([\d\.ms]+), ([\d\.]+) req\/s, ([\d\.GMB]+)\/s/) {
         $time_spent=$1;
         $reqs=$2;
-        $bw=$3;
+        $bwtemp=$3;
+        $bwtemp =~ /([\d\.]+)(\w+)/;
+         $bw = $1*8;
+        $postfix = $2;
+        $postfix =~ s/B/b/g;
+       
+        $bw = "$bw$postfix/s";
     } elsif (/time for request:\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.\%]+)/) {
         $time_for_request_mean=$3;
         $time_for_request_sd=$4
