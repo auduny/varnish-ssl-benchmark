@@ -30,14 +30,16 @@ while(<STDIN>) {
         $time_to_1st_byte_sd=$4;
     } elsif(/headers \(space savings ([\d\.\%]+)/) {
         $space_savings=$1;
-    } elsif (/0 failed/) {
+    } elsif (/(\d+) failed/) {
+        $failed=$1;
+    } elsif (/^req\/s/) {
         push @data, { port => $port, type => $type, time_spent => $time_spent, reqs => $reqs, bw => $bw, time_for_request_mean => $time_for_request_mean, time_for_connect_mean => $time_for_connect_mean, time_to_1st_byte_mean => $time_to_1st_byte_mean, space_savings => $space_savings };
     }
 }
 
 my @sorted = sort { $b->{reqs} <=> $a->{reqs} } @data;
 my $rank=0;
-print "|Rank|Port|What\t|Time\t|REQs\t|BW\t|Request|Connect|1stbyte|Savings|\n";
+print "|Nr|Port|What\t|Time\t|REQs\t|BW\t|Request|Connect|1stbyte|Savings|\n";
 print "|---|---|---|---|---|---|---|---|---|---|---|\n";
 for $line (@sorted) {
    $rank++;
