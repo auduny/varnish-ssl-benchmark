@@ -73,9 +73,8 @@ We use [h2load](https://nghttp2.org/documentation/h2load.1.html#) from the
 
 ## Hardcore machine with 64 Cores.
 
-ay@oa68-node-01:~/varnish-ssl-benchmark/bin$ cat output.txt | ./parse-benchmark.pl 
 |Nr|Port|What   |Time   |REQs   |BW     |Request|Connect|1stbyte|Savings|
-|---|---|---|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|---|---|---|
 |1|8081|(H1)->Varnish|1.31s|7613.79|21.84Gb/s|18.24ms|193.64ms|230.05ms|0.00%|
 |2|8084|(H1)->HAProxy->(H1)->Varnish|1.46s|6856.60|19.68Gb/s|28.32ms|10.67ms|62.95ms|0.00%|
 |3|8081|(H2)->Varnish|1.72s|5813.14|16.64Gb/s|33.45ms|11.16ms|49.44ms|20.00%|

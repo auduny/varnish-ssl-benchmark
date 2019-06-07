@@ -40,7 +40,7 @@ while(<STDIN>) {
 my @sorted = sort { $b->{reqs} <=> $a->{reqs} } @data;
 my $rank=0;
 print "|Nr|Port|What\t|Time\t|REQs\t|BW\t|Request|Connect|1stbyte|Savings|\n";
-print "|---|---|---|---|---|---|---|---|---|---|---|\n";
+print "|---|---|---|---|---|---|---|---|---|---|\n";
 for $line (@sorted) {
    $rank++;
    print "|$rank|$line->{port}|$line->{type}|$line->{time_spent}|$line->{reqs}|$line->{bw}|$line->{time_for_request_mean}|$line->{time_for_connect_mean}|$line->{time_to_1st_byte_mean}|$line->{space_savings}|\n"
