@@ -144,3 +144,29 @@ ay@oa68-node-01:~/
 |21|8452|(SSL/H2)H2O->(H1)->Varnish|5.85s|1708.26|5016.56Mb/s|351.63ms|103.50ms|1.27s|85.91%|
 |22|8451|(SSL/H1)H2O->(H1)->Varnish|7.20s|1388.69|4078.56Mb/s|452.57ms|135.12ms|311.93ms|0.00%|
 
+# Final Run
+
+|Nr|Port|What   |Time   |REQs   |BW     |Request|Connect|1stbyte|Savings|
+|---|---|---|---|---|---|---|---|---|---|
+|1|8081|(H2)->Varnish|269.57ms|37095.70|106.4Gb/s|18.35ms|1.06ms|21.67ms|20.00%|
+|2|8445|(SSL/H1)Haproxy->(H1)->Varnish|588.57ms|16990.25|48.72Gb/s|29.95ms|57.54ms|65.88ms|0.00%|
+|3|8448|(SSL/TCP)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish|616.19ms|16228.79|46.56Gb/s|27.19ms|42.56ms|56.76ms|0.00%|
+|4|8443|(SSL/TCP)->Hitch->(H1)->Varnish|630.63ms|15857.21|45.44Gb/s|30.63ms|18.40ms|33.97ms|0.00%|
+|5|8444|(SSL/TCP)->Hitch->(UDS/H1)->Varnish|638.71ms|15656.53|44.88Gb/s|30.13ms|18.90ms|22.20ms|0.00%|
+|6|8446|(SSL/H1)Haproxy->(H1/Proxy-Protocol)->Varnish|645.85ms|15483.42|44.4Gb/s|29.68ms|34.45ms|43.73ms|0.00%|
+|7|8445|(SSL/H1)Nginx->(H1)->Varnish|658.85ms|15177.96|43.52Gb/s|28.65ms|26.04ms|35.33ms|0.00%|
+|8|8447|(SSL/H2)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish|749.68ms|13339.02|38.24Gb/s|31.64ms|28.58ms|42.79ms|23.11%|
+|9|8450|(SSL/H2)Traefik->(H1)->Varnish|752.62ms|13286.86|38.08Gb/s|53.20ms|45.20ms|92.04ms|90.92%|
+|10|8446|(SSL/H2)Haproxy->(H1/Proxy-Protocol)->Varnish|805.00ms|12422.30|35.6Gb/s|33.12ms|26.37ms|45.50ms|23.22%|
+|11|8445|(SSL/H2)Nginx->(H2)->Varnish|813.81ms|12287.94|35.28Gb/s|30.71ms|25.66ms|41.91ms|23.11%|
+|12|8443|(SSL/TCP)->Hitch->(H2)->Varnish|820.75ms|12183.95|34.96Gb/s|37.24ms|18.68ms|26.00ms|20.00%|
+|13|8444|(SSL/TCP)->Hitch->(UDS/H2)->Varnish|834.42ms|11984.43|34.4Gb/s|35.37ms|19.65ms|50.21ms|20.00%|
+|14|8448|(SSL/TCP)Haproxy->(UDS/H2/Proxy-Protocol)->Varnish|878.12ms|11387.95|32.64Gb/s|33.68ms|29.15ms|43.92ms|19.81%|
+|15|8447|(SSL/H1)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish|1.01s|9914.66|28.4Gb/s|36.03ms|35.32ms|45.17ms|0.00%|
+|16|8081|(H1)->Varnish|1.15s|8729.39|25.04Gb/s|11.33ms|176.32ms|208.10ms|0.00%|
+|17|8084|(H1)->HAProxy->(H1)->Varnish|1.18s|8444.49|24.24Gb/s|17.17ms|259.10ms|306.82ms|0.00%|
+|18|8450|(SSL/H1)Traefik->(H1)->Varnish|1.21s|8242.77|23.6Gb/s|34.55ms|144.77ms|174.04ms|0.00%|
+|19|8445|(SSL/H2)Haproxy->(H1)->Varnish|1.47s|6822.11|19.6Gb/s|36.92ms|27.52ms|162.52ms|23.33%|
+|20|8080|(H1)->Backend(Nginx)|3.35s|2981.73|8.56Gb/s|118.44ms|224.28ms|1.45s|0.00%|
+|21|8452|(SSL/H2)H2O->(H1)->Varnish|5.71s|1750.15|5139.6Mb/s|343.01ms|92.05ms|1.31s|85.73%|
+|22|8451|(SSL/H1)H2O->(H1)->Varnish|6.93s|1443.46|4239.44Mb/s|442.08ms|137.30ms|320.20ms|0.00%|

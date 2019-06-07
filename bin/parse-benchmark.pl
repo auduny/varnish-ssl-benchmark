@@ -9,7 +9,7 @@ while(<STDIN>) {
         $type =~ s/Client->//g;
         $type =~ s/ on port (\d+)//;
         $port = $1;
-    } elsif (/finished in ([\d\.ms]+), ([\d\.]+) req\/s, ([\d\.GMB]+)\/s/) {
+    } elsif (/finished in ([\d\.ums]+), ([\d\.]+) req\/s, ([\d\.GMB]+)\/s/) {
         $time_spent=$1;
         $reqs=$2;
         $bwtemp=$3;
@@ -19,13 +19,13 @@ while(<STDIN>) {
         $postfix =~ s/B/b/g;
        
         $bw = "$bw$postfix/s";
-    } elsif (/time for request:\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.\%]+)/) {
+    } elsif (/time for request:\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.\%]+)/) {
         $time_for_request_mean=$3;
         $time_for_request_sd=$4
-    } elsif (/time for connect:\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.\%]+)/) {
+    } elsif (/time for connect:\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.\%]+)/) {
         $time_for_connect_mean=$3;
         $time_for_connect_sd=$4;
-    } elsif (/time to 1st byte:\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.ms]+)\s+([\d\.\%]+)/) {
+    } elsif (/time to 1st byte:\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.ums]+)\s+([\d\.\%]+)/) {
         $time_to_1st_byte_mean=$3;
         $time_to_1st_byte_sd=$4;
     } elsif(/headers \(space savings ([\d\.\%]+)/) {

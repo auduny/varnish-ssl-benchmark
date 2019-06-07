@@ -63,7 +63,7 @@ for type in $TYPES; do
     else
         url=https://127.0.0.1
     fi
-    h2load -t 10 -m4 $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress |tee -a /tmp/bin/output.txt
+    h2load -t 16 -m4 $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress |tee -a /tmp/bin/output.txt
     echo | tee -a /tmp/bin/output.txt
 done
 
