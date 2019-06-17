@@ -31,7 +31,7 @@ services:
     network_mode: host
     environment:
       - HITCH_PEM=/etc/ssl/hitch/self-signed.pem
-      - HITCH_PARAMS=--frontend=[*]:8443 --backend=[127.0.0.1]:8082 --alpn-protos="h2, http/1.1" --write-proxy-v2
+      - HITCH_PARAMS=--frontend=[*]:8443 --workers 30 --backend=[127.0.0.1]:8082 --alpn-protos="h2, http/1.1" --write-proxy-v2
       - HITCH_CIPHER=EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
     volumes:
       - ${PWD}/log/hitch-front:/var/log
@@ -47,7 +47,7 @@ services:
     hostname: docker-hitch-uds
     environment:
       - HITCH_PEM=/etc/ssl/hitch/self-signed.pem
-      - HITCH_PARAMS=--frontend=[*]:8444 --backend=/tmp/run/varnish-proxy.sock --alpn-protos="h2, http/1.1" --write-proxy-v2
+      - HITCH_PARAMS=--frontend=[*]:8444 --workers 30 --backend=/tmp/run/varnish-proxy.sock --alpn-protos="h2, http/1.1" --write-proxy-v2
       - HITCH_CIPHER=EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
     volumes:
       - ${PWD}/log/hitch-front:/var/log
