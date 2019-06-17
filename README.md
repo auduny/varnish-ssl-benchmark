@@ -128,3 +128,32 @@ We use [h2load](https://nghttp2.org/documentation/h2load.1.html#) from the
 |Client->(SSL/TCP)->Hitch->(UDS/H2)->Varnish on port 8444|4.42s|1132.08|415.72MB|
 |Client->(SSL/TCP)->Hitch->(H2)->Varnish on port 8443|4.49s|1114.79|409.37MB|
 |Client->(SSL/H2)Envoy->(H2)->Varnish on port 8449|4.71s|1060.48|389.33MB|
+
+## Tuned HAProxy
+
+|what	|time	|reqs	|bw	|
+|-----|---|---|---|
+|Client->(H1)->Varnish on port 8081|583.74ms|8565.50|3.07GB|
+|Client->(H2)->Varnish on port 8081|855.80ms|5842.47|2.10GB|
+|Client->(H1)->HAProxy->(H1)->Varnish on port 8084|1.33s|3765.59|1.35GB|
+|Client->(SSL/H1)Haproxy->(H1)->Varnish on port 8445|1.58s|3168.90|1.14GB|
+|Client->(SSL/TCP)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8448|1.62s|3090.81|1.11GB|
+|Client->(SSL/H1)Traefik->(H1)->Varnish on port 8450|1.67s|2998.49|1.07GB|
+|Client->(SSL/H2)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447|1.79s|2794.36|1.00GB|
+|Client->(SSL/H1)Haproxy->(UDS/H1/Proxy-Protocol)->Varnish on port 8447|1.79s|2791.70|1.00GB|
+|Client->(H1)->Backend(Nginx) on port 8080|1.98s|2531.56|929.10MB|
+|Client->(SSL/TCP)Haproxy->(UDS/H2/Proxy-Protocol)->Varnish on port 8448|2.03s|2464.17|904.89MB|
+|Client->(SSL/H2)H2O->(H1)->Varnish on port 8452|2.12s|2355.47|864.64MB|
+|Client->(SSL/H1)H2O->(H1)->Varnish on port 8451|2.15s|2329.78|855.31MB|
+|Client->(SSL/H2)Traefik->(H1)->Varnish on port 8450|2.19s|2280.08|836.98MB|
+|Client->(SSL/H2)Nginx->(H2)->Varnish on port 8445|2.35s|2127.78|781.33MB|
+|Client->(SSL/H1)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446|2.50s|2000.34|734.29MB|
+|Client->(SSL/H2)Haproxy->(H1)->Varnish on port 8445|3.00s|1668.00|612.49MB|
+|Client->(SSL/H1)Nginx->(H1)->Varnish on port 8445|3.03s|1652.83|606.72MB|
+|Client->(SSL/H2)Envoy->(H2)->Varnish on port 8449|3.08s|1624.19|596.28MB|
+|Client->(SSL/H2)Haproxy->(H1/Proxy-Protocol)->Varnish on port 8446|3.43s|1457.62|535.24MB|
+|Client->(SSL/H1)Envoy->(H2)->Varnish on port 8449|4.18s|1195.06|438.74MB|
+|Client->(SSL/TCP)->Hitch->(UDS/H1)->Varnish on port 8444|4.22s|1185.94|435.36MB|
+|Client->(SSL/TCP)->Hitch->(H1)->Varnish on port 8443|4.36s|1146.86|421.01MB|
+|Client->(SSL/TCP)->Hitch->(UDS/H2)->Varnish on port 8444|4.38s|1141.05|419.01MB|
+|Client->(SSL/TCP)->Hitch->(H2)->Varnish on port 8443|4.39s|1139.41|418.41MB|

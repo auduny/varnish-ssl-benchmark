@@ -61,7 +61,7 @@ for type in $TYPES; do
     else
         url=https://127.0.0.1
     fi
-    h2load $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress | egrep '^(finished|request|Application)' |tee -a /tmp/bin/output.txt
+    h2load $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress  |tee -a /tmp/bin/output.txt
     echo | tee -a /tmp/bin/output.txt
 done
 
