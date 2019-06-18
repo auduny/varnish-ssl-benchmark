@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: nginx:latest
+    image: nginx:1.17.0
     network_mode: host
     ports:
       - "8080:8080"
@@ -10,7 +10,7 @@ services:
       - ${PWD}/etc/backend:/etc/nginx
       - ${PWD}/etc/www-root:/usr/share/nginx/html
   varnish:
-    image: emgag/varnish:6.0.3-2 
+    image: emgag/varnish:6.0.3-3 
     network_mode: host
     hostname: docker-varnish
     volumes:
@@ -26,7 +26,7 @@ services:
     depends_on: 
       - backend
   hitch:
-    image: zazukoians/hitch:1.5.0
+    image: zazukoians/hitch:1.5.0_2
     hostname: docker-hitch
     network_mode: host
     environment:
@@ -42,7 +42,7 @@ services:
     depends_on:
       - varnish
   hitch_uds:
-    image: zazukoians/hitch:1.5.0
+    image: zazukoians/hitch:1.5.0_2
     network_mode: host
     hostname: docker-hitch-uds
     environment:
@@ -59,7 +59,7 @@ services:
     depends_on:
       - varnish
   haproxy:
-    image: haproxy:1.9.8
+    image: haproxy:2.0
     network_mode: host
     hostname: docker-haproxy
     volumes:
@@ -76,7 +76,7 @@ services:
     depends_on:
       - varnish
   envoy:
-    image: envoyproxy/envoy
+    image: envoyproxy/envoy:v1.10.0
     network_mode: host
     ports:
       - "8449:8449"
@@ -98,7 +98,7 @@ services:
     depends_on:
       - varnish
   h2o:
-    image: lkwg82/h2o-http2-server
+    image: lkwg82/h2o-http2-server:v2.2.5
     network_mode: host
     ports: 
       - "8451:8451"
@@ -111,7 +111,7 @@ services:
       - varnish
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.17.0
     hostname: docker-nginx
     network_mode: host
     volumes:
