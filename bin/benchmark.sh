@@ -6,12 +6,9 @@ sleep 10
 CLIENTSLIST="100 500"
 REQUESTSLIST="500 1000"
 
-
-
-
 CLIENTS=${BENCH_CLIENTS:-200}
 REQUESTS=${BENCH_REQUESTS:-10000}
-
+CORES=`grep -c ^processor /proc/cpuinfo`
 
 RED='\033[0;31m'
 NC='\033[0m' # No Color
@@ -19,7 +16,7 @@ NC='\033[0m' # No Color
 rm /tmp/bin/output.txt
 echo | tee -a /tmp/bin/output.txt
 echo "=====================================================" |tee -a /tmp/bin/output.txt
-echo "Running with $CLIENTS clients and $REQUESTS requests" | tee -a /tmp/bin/output.txt
+echo "Running with $CLIENTS clients and $REQUESTS requests on $CORES cores" | tee -a /tmp/bin/output.txt
 
 
 TYPES="
@@ -63,7 +60,7 @@ for type in $TYPES; do
     else
         url=https://127.0.0.1
     fi
-    h2load -t 16 -m4 $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress |tee -a /tmp/bin/output.txt
+    h2load -t $CORES $opts $url:$port -c $CLIENTS -n $REQUESTS | grep -v progress |tee -a /tmp/bin/output.txt
     echo | tee -a /tmp/bin/output.txt
 done
 
